@@ -1,4 +1,12 @@
 #!/bin/bash
+################Files to be created before starting exicution####################
+# sudo apt-get install postfix mailutils                                        #
+# https://kifarunix.com/configure-postfix-to-use-gmail-smtp-on-ubuntu-18-04/    #
+# mkdir -p $HOME/scripts							                                          #
+# touch $HOME/scripts/MyIP                                                      # 							
+# touch /tmp/myip								                                                #
+# Download alert.wav file and copy it into $HOME/scripts directory		          #
+#################################################################################
 PublicIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 data=$(date)
 OldIP=$(cat /tmp/myip)
@@ -8,9 +16,9 @@ then
 fi
 if [[ "$OldIP" == "$PublicIP" ]]
 then
-        echo "IP did not changed $OldIP at $data " >> /root/scripts/MyIP
+        echo "IP did not changed $OldIP at $data " >> $HOME/scripts/MyIP
 else
-        echo "IP changed to $PublicIP at $data " >> /root/scripts/MyIP
+        echo "IP changed to $PublicIP at $data " >> $HOME/scripts/MyIP
         echo "$PublicIP" > /tmp/myip
         echo "Dear Team \n Your Home public changed by your ISP to $PublicIP " | mail -s "Change in Public IP to $PublicIP" -a "From: your_source@gmail.com" admin1@gmail.com,admin2@gmail.com >> /dev/null   ### On IP change it will send mail alert
 fi
