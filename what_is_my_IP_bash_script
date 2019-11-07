@@ -1,0 +1,16 @@
+#!/bin/bash
+PublicIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
+data=$(date)
+OldIP=$(cat /tmp/myip)
+if [[ "$OldIP" == "" ]]
+then 
+  echo "$PublicIP" > /tmp/myip
+fi
+if [[ "$OldIP" == "$PublicIP" ]]
+then
+        echo "IP did not changed $OldIP at $data " >> /root/scripts/MyIP
+else
+        echo "IP changed to $PublicIP at $data " >> /root/scripts/MyIP
+        echo "$PublicIP" > /tmp/myip
+        echo "Dear Team \n Your Home public changed by your ISP to $PublicIP " | mail -s "Change in Public IP to $PublicIP" -a "From: your_source@gmail.com" admin1@gmail.com,admin2@gmail.com >> /dev/null   ### On IP change it will send mail alert
+fi
